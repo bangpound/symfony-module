@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * Implements hook_user_logout().
+ *
+ * Invalidates the Symfony session and replaces authenticated user with anonymous.
+ */
+function symfony_user_logout($account) {
+  global $user;
+  /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+  $session = $GLOBALS['session'];
+
+  // Destroy the current session, and reset $user to the anonymous user.
+  $user = drupal_anonymous_user();
+  $session->invalidate();
+}
+
+/**
+ * Implements hook_watchdog().
+ */
+function symfony_watchdog(array $log_entry) {
+  /** @var \Psr\Log\LoggerInterface $logger */
+  $logger = $GLOBALS['logger'];
+  $log_level_map = array(
+      WATCHDOG_EMERGENCY => \Psr\Log\LogLevel::EMERGENCY,
+      WATCHDOG_ALERT => \Psr\Log\LogLevel::ALERT,
+      WATCHDOG_CRITICAL => \Psr\Log\LogLevel::CRITICAL,
+      WATCHDOG_ERROR => \Psr\Log\LogLevel::ERROR,
+      WATCHDOG_WARNING => \Psr\Log\LogLevel::WARNING,
+      WATCHDOG_NOTICE => \Psr\Log\LogLevel::NOTICE,
+      WATCHDOG_INFO => \Psr\Log\LogLevel::INFO,
+      WATCHDOG_DEBUG => \Psr\Log\LogLevel::DEBUG,
+  );
+  $level = $log_level_map[$log_entry['severity']];
+  $message = is_array($log_entry['variables']) ? strtr($log_entry['message'], $log_entry['variables']) : $log_entry['message'];
+  $logger->log($level, $message, $log_entry);
+}
