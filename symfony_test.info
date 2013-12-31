@@ -1,0 +1,4 @@
+name = Symfony test
+description = Support module for Symfony integration testing
+core = 7.x
+hidden = TRUE

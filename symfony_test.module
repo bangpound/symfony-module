@@ -1,0 +1,43 @@
+<?php
+
+function symfony_test_menu() {
+  $items = array();
+  $items['symfony/html'] = array(
+    'title' => 'drupal_deliver_html_page',
+    'page callback' => 'symfony_test_html_test_render',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['symfony/ajax'] = array(
+    'title' => 'ajax_render',
+    'page callback' => 'symfony_test_ajax_test_render',
+    'delivery callback' => 'ajax_deliver',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['symfony/exit'] = array(
+    'title' => 'text_exit',
+    'page callback' => 'symfony_test_html_test_exit',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function symfony_test_ajax_test_render() {
+  drupal_add_js(array('ajax' => 'test'), 'setting');
+  return array('#type' => 'ajax', '#commands' => array());
+}
+
+function symfony_test_html_test_render() {
+  return array(
+    'content' => array(
+      '#markup' => '<p>Test</p>',
+    ),
+  );
+}
+
+function symfony_test_html_test_exit() {
+  print '<p>Test</p>';
+  exit;
+}
