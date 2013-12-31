@@ -19,6 +19,13 @@ function symfony_user_logout($account) {
  * Implements hook_watchdog().
  */
 function symfony_watchdog(array $log_entry) {
+
+  // In some cases, services have not been instantiated. This is a clumsy
+  // way to prevent fatal errors, but it also stops Drupal watchdog logging.
+  if (!isset($GLOBALS['logger'])) {
+    return;
+  }
+
   /** @var \Psr\Log\LoggerInterface $logger */
   $logger = $GLOBALS['logger'];
   $log_level_map = array(
@@ -32,6 +39,7 @@ function symfony_watchdog(array $log_entry) {
       WATCHDOG_DEBUG => \Psr\Log\LogLevel::DEBUG,
   );
   $level = $log_level_map[$log_entry['severity']];
-  $message = is_array($log_entry['variables']) ? strtr($log_entry['message'], $log_entry['variables']) : $log_entry['message'];
+  $message = is_array($log_entry['variables']) ?
+    strtr($log_entry['message'], $log_entry['variables']) : $log_entry['message'];
   $logger->log($level, $message, $log_entry);
 }
