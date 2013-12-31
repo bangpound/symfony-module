@@ -1,0 +1,17 @@
+{
+    "name": "bangpound/symfony-module",
+    "description": "Integration module for Symfony Drupal",
+    "type": "drupal-module",
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "require-dev": {
+    },
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Benjamin Doherty",
+            "email": "bjd@bangpound.org"
+        }
+    ]
+}
