@@ -1,3 +1,4 @@
 name = Symfony Integration
 description = Integrates with Symfony kernel.
 core = 7.x
+required = TRUE
