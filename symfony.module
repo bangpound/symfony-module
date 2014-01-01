@@ -53,3 +53,44 @@ function symfony_form_system_performance_settings_alter(&$form, &$form_state) {
   $form['caching']['cache']['#access'] = FALSE;
   $form['caching']['cache']['#value'] = FALSE;
 }
+
+/**
+ * Implements hook_flush_caches().
+ *
+ * This hook is designed to tell Drupal which additional cache bins should be
+ * flushed when the Drupal cache is cleared, but instead this function attaches
+ * a listener to the shutdown event which runs a Symfony Command to clear
+ * the application cache.
+ */
+function symfony_flush_caches() {
+  /** @var \Symfony\Component\HttpKernel\Kernel $kernel */
+  $kernel = $GLOBALS['kernel'];
+
+  /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
+  $dispatcher = $kernel->getContainer()->get('event_dispatcher');
+
+  $listener = function (\Symfony\Component\HttpKernel\Event\PostResponseEvent $event) use ($kernel) {
+    $appDir = $kernel->getRootDir();
+    $cmd = 'cache:clear --no-warmup';
+    $timeout = 300;
+
+    $phpFinder = new \Symfony\Component\Process\PhpExecutableFinder();
+    if (!$phpPath = $phpFinder->find()) {
+      throw new \RuntimeException('The php executable could not be found, add it to your PATH environment variable and try again');
+    }
+
+    $console = escapeshellarg($appDir.'/console');
+
+    $process = new \Symfony\Component\Process\Process($phpPath.' '.$console.' '.$cmd, null, null, null, $timeout);
+    $process->run(function ($type, $buffer) { drupal_set_message($buffer); });
+    if (!$process->isSuccessful()) {
+      throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', escapeshellarg($cmd)));
+    }
+  };
+
+  $dispatcher->addListener(\Symfony\Component\HttpKernel\KernelEvents::TERMINATE, $listener);
+
+  // Return something redundant so that this function has only intended
+  // side effects.
+  return array('cache');
+}
