@@ -43,3 +43,13 @@ function symfony_watchdog(array $log_entry) {
     strtr($log_entry['message'], $log_entry['variables']) : $log_entry['message'];
   $logger->log($level, $message, $log_entry);
 }
+
+/**
+ * Implements hook_form_FORMID_alter().
+ */
+function symfony_form_system_performance_settings_alter(&$form, &$form_state) {
+  // Force the page cache to always be disabled and this setting to be
+  // inaccessible.
+  $form['caching']['cache']['#access'] = FALSE;
+  $form['caching']['cache']['#value'] = FALSE;
+}
