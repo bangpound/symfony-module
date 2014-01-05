@@ -22,12 +22,12 @@ function symfony_watchdog(array $log_entry) {
 
   // In some cases, services have not been instantiated. This is a clumsy
   // way to prevent fatal errors, but it also stops Drupal watchdog logging.
-  if (!isset($GLOBALS['logger'])) {
+  if (!isset($GLOBALS['service_container'])) {
     return;
   }
 
   /** @var \Psr\Log\LoggerInterface $logger */
-  $logger = $GLOBALS['logger'];
+  $logger = $GLOBALS['service_container']->get('logger');
   $log_level_map = array(
     WATCHDOG_EMERGENCY => \Psr\Log\LogLevel::EMERGENCY,
     WATCHDOG_ALERT => \Psr\Log\LogLevel::ALERT,
