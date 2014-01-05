@@ -29,14 +29,14 @@ function symfony_watchdog(array $log_entry) {
   /** @var \Psr\Log\LoggerInterface $logger */
   $logger = $GLOBALS['logger'];
   $log_level_map = array(
-      WATCHDOG_EMERGENCY => \Psr\Log\LogLevel::EMERGENCY,
-      WATCHDOG_ALERT => \Psr\Log\LogLevel::ALERT,
-      WATCHDOG_CRITICAL => \Psr\Log\LogLevel::CRITICAL,
-      WATCHDOG_ERROR => \Psr\Log\LogLevel::ERROR,
-      WATCHDOG_WARNING => \Psr\Log\LogLevel::WARNING,
-      WATCHDOG_NOTICE => \Psr\Log\LogLevel::NOTICE,
-      WATCHDOG_INFO => \Psr\Log\LogLevel::INFO,
-      WATCHDOG_DEBUG => \Psr\Log\LogLevel::DEBUG,
+    WATCHDOG_EMERGENCY => \Psr\Log\LogLevel::EMERGENCY,
+    WATCHDOG_ALERT => \Psr\Log\LogLevel::ALERT,
+    WATCHDOG_CRITICAL => \Psr\Log\LogLevel::CRITICAL,
+    WATCHDOG_ERROR => \Psr\Log\LogLevel::ERROR,
+    WATCHDOG_WARNING => \Psr\Log\LogLevel::WARNING,
+    WATCHDOG_NOTICE => \Psr\Log\LogLevel::NOTICE,
+    WATCHDOG_INFO => \Psr\Log\LogLevel::INFO,
+    WATCHDOG_DEBUG => \Psr\Log\LogLevel::DEBUG,
   );
   $level = $log_level_map[$log_entry['severity']];
   $message = is_array($log_entry['variables']) ?
