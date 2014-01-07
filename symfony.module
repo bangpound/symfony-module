@@ -73,6 +73,12 @@ function symfony_form_system_performance_settings_alter(&$form, &$form_state) {
  * the application cache.
  */
 function symfony_flush_caches() {
+  // In some cases, services have not been instantiated. This is a clumsy
+  // way to prevent fatal errors, but it also stops Drupal watchdog logging.
+  if (!isset($GLOBALS['service_container'])) {
+    return;
+  }
+
   /** @var \Symfony\Component\HttpKernel\Kernel $kernel */
   $kernel = $GLOBALS['service_container']->get('kernel');
 
