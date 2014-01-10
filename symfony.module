@@ -110,3 +110,14 @@ function symfony_flush_caches() {
   // side effects.
   return array('cache');
 }
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function symfony_system_info_alter(&$info, $file, $type) {
+  if ($type == 'module' && $file->name == 'openid') {
+    $info['hidden'] = TRUE;
+    $info['dependencies'][] = '_missing_dependency';
+    unset($info['core']);
+  }
+}
