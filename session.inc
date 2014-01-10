@@ -11,9 +11,6 @@
  * Initializes the session handler, starting a session if needed.
  */
 function drupal_session_initialize() {
-  global $user;
-  $user = drupal_anonymous_user();
-  date_default_timezone_set(drupal_get_user_timezone());
 }
 
 /**
