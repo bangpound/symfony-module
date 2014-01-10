@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Symfony Drupal integration module.
+ */
 
 /**
  * Implements hook_form_FORMID_alter().
@@ -86,19 +90,19 @@ function symfony_flush_caches() {
   $dispatcher = $GLOBALS['service_container']->get('event_dispatcher');
 
   $listener = function (\Symfony\Component\HttpKernel\Event\PostResponseEvent $event) use ($kernel) {
-    $appDir = $kernel->getRootDir();
+    $app_dir = $kernel->getRootDir();
     $cmd = 'cache:clear --no-warmup';
     $timeout = 300;
 
-    $phpFinder = new \Symfony\Component\Process\PhpExecutableFinder();
-    if (!$phpPath = $phpFinder->find()) {
+    $php_finder = new \Symfony\Component\Process\PhpExecutableFinder();
+    if (!$php_path = $php_finder->find()) {
       throw new \RuntimeException('The php executable could not be found, add it to your PATH environment variable and try again');
     }
 
-    $console = escapeshellarg($appDir.'/console');
+    $console = escapeshellarg($app_dir . '/console');
 
-    $process = new \Symfony\Component\Process\Process($phpPath.' '.$console.' '.$cmd, null, null, null, $timeout);
-    $process->run(function ($type, $buffer) { drupal_set_message($buffer); });
+    $process = new \Symfony\Component\Process\Process($php_path . ' ' . $console . ' ' . $cmd, NULL, NULL, NULL, $timeout);
+    $process->run(function ($type, $buffer) { drupal_set_message(check_plain($buffer)); });
     if (!$process->isSuccessful()) {
       throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', escapeshellarg($cmd)));
     }
