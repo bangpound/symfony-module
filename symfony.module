@@ -77,6 +77,7 @@ function symfony_watchdog(array $log_entry) {
  * Implements hook_form_FORMID_alter().
  */
 function symfony_form_system_performance_settings_alter(&$form, &$form_state) {
+
   // Force the page cache to always be disabled and this setting to be
   // inaccessible.
   $form['caching']['cache']['#access'] = FALSE;
@@ -93,7 +94,7 @@ function symfony_form_system_performance_settings_alter(&$form, &$form_state) {
  */
 function symfony_flush_caches() {
   // In some cases, services have not been instantiated. This is a clumsy
-  // way to prevent fatal errors, but it also stops Drupal watchdog logging.
+  // way to prevent fatal errors.
   if (!isset($GLOBALS['service_container'])) {
     return;
   }
