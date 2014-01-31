@@ -8,6 +8,13 @@
  * Implements hook_form_FORMID_alter().
  */
 function symfony_form_user_login_block_alter(&$form, &$form_state) {
+
+  // In some cases, services have not been instantiated. This is a clumsy
+  // way to prevent fatal errors.
+  if (!isset($GLOBALS['service_container'])) {
+    return;
+  }
+
   $csrf_token_manager = $GLOBALS['service_container']->get('security.csrf.token_manager');
   $form['#submit'] = array();
   $form['#action'] = $GLOBALS['service_container']->get('router')->generate('user/login');
@@ -21,6 +28,13 @@ function symfony_form_user_login_block_alter(&$form, &$form_state) {
  * Implements hook_form_FORMID_alter().
  */
 function symfony_form_user_login_alter(&$form, &$form_state) {
+
+  // In some cases, services have not been instantiated. This is a clumsy
+  // way to prevent fatal errors.
+  if (!isset($GLOBALS['service_container'])) {
+    return;
+  }
+
   $csrf_token_manager = $GLOBALS['service_container']->get('security.csrf.token_manager');
   $form['#submit'] = array();
   $form['#action'] = $GLOBALS['service_container']->get('router')->generate('user/login');
