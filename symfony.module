@@ -149,3 +149,28 @@ function symfony_system_info_alter(&$info, $file, $type) {
     unset($info['core']);
   }
 }
+
+/**
+ * Implements hook_block_info_alter().
+ */
+function symfony_block_info_alter(&$blocks, $theme, $code_blocks) {
+  $blocks['system']['powered-by']['info'] = t('Powered by Drufony');
+}
+
+/**
+ * Returns HTML for the Powered by Drufony text.
+ *
+ * @ingroup themeable
+ */
+function symfony_system_powered_by() {
+  return '<span>' . t('Powered by <a href="@poweredby">Drufony</a>', array('@poweredby' => 'http://drufony.github.io')) . '</span>';
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function symfony_theme_registry_alter(&$theme_registry) {
+  if (isset($theme_registry['system_powered_by']) && ('theme_system_powered_by' === $theme_registry['system_powered_by']['function'])) {
+    $theme_registry['system_powered_by']['function'] = 'symfony_system_powered_by';
+  }
+}
