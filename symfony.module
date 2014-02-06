@@ -126,7 +126,7 @@ function symfony_flush_caches() {
     $console = escapeshellarg($app_dir . '/console');
 
     $process = new \Symfony\Component\Process\Process($php_path . ' ' . $console . ' ' . $cmd, NULL, NULL, NULL, $timeout);
-    $process->run(function ($type, $buffer) { drupal_set_message(check_plain($buffer)); error_log($buffer); });
+    $process->run(function ($type, $buffer) { drupal_set_message(check_plain($buffer)); });
     if (!$process->isSuccessful()) {
       throw new \RuntimeException(sprintf('An error occurred when executing the "%s" command.', escapeshellarg($cmd)));
     }
