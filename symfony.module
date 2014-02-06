@@ -107,7 +107,7 @@ function symfony_flush_caches() {
 
   $listener = function (\Symfony\Component\HttpKernel\Event\PostResponseEvent $event) use ($kernel) {
     $app_dir = $kernel->getRootDir();
-    $cmd = 'cache:clear --no-warmup';
+    $cmd = 'cache:clear --no-warmup --env='. $kernel->getEnvironment();
     $timeout = 300;
 
     $php_finder = new \Symfony\Component\Process\PhpExecutableFinder();
