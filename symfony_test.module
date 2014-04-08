@@ -68,11 +68,13 @@ function symfony_test_menu() {
 }
 
 function symfony_test_ajax_test_render() {
+  drupal_set_message(__FUNCTION__);
   drupal_add_js(array('ajax' => 'test'), 'setting');
   return array('#type' => 'ajax', '#commands' => array());
 }
 
 function symfony_test_html_test_render() {
+  drupal_set_message(__FUNCTION__);
   return array(
     'content' => array(
       '#markup' => '<p>Test</p>',
@@ -81,19 +83,23 @@ function symfony_test_html_test_render() {
 }
 
 function symfony_test_html_test_exit() {
+  drupal_set_message(__FUNCTION__);
   print '<p>Test</p>';
   exit;
 }
 
 function symfony_test_exception_404() {
+  drupal_set_message(__FUNCTION__);
   throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 }
 
 function symfony_test_exception_403() {
+  drupal_set_message(__FUNCTION__);
   throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 }
 
 function symfony_test_drupal_goto() {
+  drupal_set_message(__FUNCTION__);
   drupal_goto();
 }
 
