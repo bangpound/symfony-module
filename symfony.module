@@ -16,16 +16,9 @@ function symfony_menu_alter(&$items) {
  * Implements hook_form_FORMID_alter().
  */
 function symfony_form_user_login_block_alter(&$form, &$form_state) {
-
-  // In some cases, services have not been instantiated. This is a clumsy
-  // way to prevent fatal errors.
-  if (!isset($GLOBALS['service_container'])) {
-    return;
-  }
-
-  $csrf_token_manager = $GLOBALS['service_container']->get('security.csrf.token_manager');
+  $csrf_token_manager = \Drufony::get('security.csrf.token_manager');
   $form['#submit'] = array();
-  $form['#action'] = $GLOBALS['service_container']->get('router')->generate('user/login');
+  $form['#action'] = \Drufony::get('router')->generate('user/login');
   $form['_csrf_token'] = array(
     '#type' => 'hidden',
     '#value' => $csrf_token_manager->getToken('authenticate')->getValue(),
@@ -36,16 +29,9 @@ function symfony_form_user_login_block_alter(&$form, &$form_state) {
  * Implements hook_form_FORMID_alter().
  */
 function symfony_form_user_login_alter(&$form, &$form_state) {
-
-  // In some cases, services have not been instantiated. This is a clumsy
-  // way to prevent fatal errors.
-  if (!isset($GLOBALS['service_container'])) {
-    return;
-  }
-
-  $csrf_token_manager = $GLOBALS['service_container']->get('security.csrf.token_manager');
+  $csrf_token_manager = \Drufony::get('security.csrf.token_manager');
   $form['#submit'] = array();
-  $form['#action'] = $GLOBALS['service_container']->get('router')->generate('user/login');
+  $form['#action'] = \Drufony::get('router')->generate('user/login');
   $form['_csrf_token'] = array(
     '#type' => 'hidden',
     '#value' => $csrf_token_manager->getToken('authenticate')->getValue(),
@@ -56,15 +42,8 @@ function symfony_form_user_login_alter(&$form, &$form_state) {
  * Implements hook_watchdog().
  */
 function symfony_watchdog(array $log_entry) {
-
-  // In some cases, services have not been instantiated. This is a clumsy
-  // way to prevent fatal errors, but it also stops Drupal watchdog logging.
-  if (!isset($GLOBALS['service_container'])) {
-    return;
-  }
-
   /** @var \Psr\Log\LoggerInterface $logger */
-  $logger = $GLOBALS['service_container']->get('logger');
+  $logger = \Drufony::get('logger');
   $log_level_map = array(
     WATCHDOG_EMERGENCY => \Psr\Log\LogLevel::EMERGENCY,
     WATCHDOG_ALERT => \Psr\Log\LogLevel::ALERT,
@@ -101,17 +80,11 @@ function symfony_form_system_performance_settings_alter(&$form, &$form_state) {
  * the application cache.
  */
 function symfony_flush_caches() {
-  // In some cases, services have not been instantiated. This is a clumsy
-  // way to prevent fatal errors.
-  if (!isset($GLOBALS['service_container'])) {
-    return;
-  }
-
-  /** @var \Symfony\Component\HttpKernel\Kernel $kernel */
-  $kernel = $GLOBALS['service_container']->get('kernel');
+  /** @var \Symfony\Component\HttpKernel\KernelInterface $kernel */
+  $kernel = \Drufony::getKernel();
 
   /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
-  $dispatcher = $GLOBALS['service_container']->get('event_dispatcher');
+  $dispatcher = \Drufony::getEventDispatcher();
 
   $listener = function (\Symfony\Component\HttpKernel\Event\PostResponseEvent $event) use ($kernel) {
     $app_dir = $kernel->getRootDir();
