@@ -4,7 +4,6 @@
  * Implements hook_menu()
  */
 function symfony_test_menu() {
-    system_menu();
   $items = array();
   $items['symfony'] = array(
     'title' => 'Symfony',
