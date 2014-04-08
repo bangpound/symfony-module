@@ -1,38 +1,70 @@
 <?php
 
+/**
+ * Implements hook_menu()
+ */
 function symfony_test_menu() {
+    system_menu();
   $items = array();
+  $items['symfony'] = array(
+    'title' => 'Symfony',
+    'access callback' => TRUE,
+    'page callback' => 'system_admin_menu_block_page',
+    'file path' => drupal_get_path('module', 'system'),
+    'file' => 'system.admin.inc',
+  );
   $items['symfony/html'] = array(
     'title' => 'drupal_deliver_html_page',
     'page callback' => 'symfony_test_html_test_render',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
   );
   $items['symfony/ajax'] = array(
     'title' => 'ajax_render',
     'page callback' => 'symfony_test_ajax_test_render',
     'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
   );
   $items['symfony/exit'] = array(
-    'title' => 'text_exit',
+    'title' => 'exit',
     'page callback' => 'symfony_test_html_test_exit',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
   );
   $items['symfony/exception/404'] = array(
-    'title' => 'test_exception',
+    'title' => 'exception 404',
     'page callback' => 'symfony_test_exception_404',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
   );
   $items['symfony/exception/403'] = array(
-    'title' => 'test_exception',
+    'title' => 'exception 403',
     'page callback' => 'symfony_test_exception_403',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
   );
+  $items['symfony/goto'] = array(
+    'title' => 'goto',
+    'page callback' => 'symfony_test_drupal_goto',
+    'access callback' => TRUE,
+  );
+  $items['symfony/not-found'] = array(
+    'title' => 'not found',
+    'page callback' => 'symfony_not_found',
+    'access callback' => TRUE,
+  );
+  $items['symfony/access-denied'] = array(
+    'title' => 'access denied',
+    'page callback' => 'symfony_access_denied',
+    'access callback' => TRUE,
+  );
+  $items['symfony/offline'] = array(
+    'title' => 'site offline',
+    'page callback' => 'symfony_site_offline',
+    'access callback' => TRUE,
+  );
+  $items['symfony/ip-block'] = array(
+    'title' => 'ip block',
+    'page callback' => 'symfony_ip_block',
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -59,5 +91,26 @@ function symfony_test_exception_404() {
 }
 
 function symfony_test_exception_403() {
+  throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+}
+
+function symfony_test_drupal_goto() {
+  drupal_goto();
+}
+
+function symfony_not_found() {
+  drupal_not_found();
+}
+
+function symfony_access_denied() {
+  drupal_access_denied();
+}
+
+function symfony_site_offline() {
+  drupal_site_offline();
+}
+
+function symfony_ip_block() {
+  print 'Sorry, ' . check_plain(ip_address()) . ' has been banned.';
   throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 }
